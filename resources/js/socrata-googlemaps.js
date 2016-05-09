@@ -13,9 +13,10 @@ SocrataGoogleMaps = function(config) {
     this.clickZoom = config.clickZoom || 15;
     this.enableListings = config.enableListings || true;
     this.enableDirections = config.enableDirections || true;
+    this.formatData = config.formatData || false;
     this._markers = [];
     this._data = [];
-    this._directionsDiv = $('<div class="sgm-directions"><div class="mapp-route"><a href="#" class="mapp-myloc">My location</a><div><span class="mapp-dir-icon mapp-dir-a"></span><input class="mapp-dir-saddr" tabindex="1"><a href="#" class="mapp-dir-swap"><span class="mapp-dir-icon mapp-dir-arrows" title="Swap start and end"></span></a></div><div class="mapp-dir-saddr-err"></div><div><span class="mapp-dir-icon mapp-dir-b"></span><input class="sgm-dir-daddr" tabindex="2"></div><div class="mapp-dir-daddr-err"></div></div></div>');
+    this._directionsDiv = $('<div class="sgm-directions"><div class="mapp-route"><a href="#" class="mapp-myloc">My location</a><div><span class="mapp-dir-icon mapp-dir-a"></span><input class="mapp-dir-saddr" tabindex="1"><a href="#" class="mapp-dir-swap"><span class="mapp-dir-icon mapp-dir-arrows" title="Swap start and end"></span></a></div><div class="mapp-dir-saddr-err"></div><div><span class="mapp-dir-icon mapp-dir-b"></span><input class="sgm-dir-daddr" tabindex="2"></div><div class="mapp-dir-daddr-err"></div></div><div style="margin-top: 10px;"><input class="mapp-dir-get" type="button" value="Get Directions"><a class="mapp-dir-print" href="#">Print</a><a class="mapp-dir-close" href="#">Close</a><span class="mapp-spinner" style="display:none"></span></div></div>');
 
 //    <div class="mapp-route">
 //		<a href="#" class="mapp-myloc">My location</a>
@@ -53,6 +54,20 @@ SocrataGoogleMaps = function(config) {
 SocrataGoogleMaps.prototype.load = function(filter, cb) {
     var self = this;
     $.getJSON(this.baseUrl + '/resource/' + this.table + '.json', filter, function(data) {
+        if(self.formatData) {
+            $.each(data, function (idx, record) {
+                $.each(self.formatData, function(fx, fd) {
+                    switch(fd.type) {
+                        case 'parse':
+                            if(typeof eval('record.'+fd.field) != 'undefined') {
+                                eval('record.'+fd.field+' = JSON.parse(record.'+fd.field+')' );
+                                data[idx] = record;
+                            }
+                            break;
+                    }
+                });
+            });
+        }
         self.renderRecords(data);
         self._data = data;
         if (cb) {
@@ -83,39 +98,13 @@ SocrataGoogleMaps.prototype.renderRecords = function(data, status) {
 
 SocrataGoogleMaps.prototype.addMarker = function(record) {
     var self = this;
-    
-//            var address_txt = '';
-//            var address_obj;
-//            if (entry.location_1 && entry.location_1.human_address) {
-//                address_obj = JSON.parse(entry.location_1.human_address);
-//                (address_obj && address_obj.address) ? (address_txt = address_txt + address_obj.address + '<br>') : '';
-//                var ar = [];
-//                (address_obj && address_obj.city) ? (ar.push(address_obj.city)) : '';
-//                var tmp = '';
-//                (address_obj && address_obj.state) ? (tmp = tmp + address_obj.state + ' ') : '';
-//                (address_obj && address_obj.zip) ? (tmp = tmp + address_obj.zip) : '';
-//                if (tmp != '') {
-//                    ar.push(tmp.trim());
-//                }
-//                if (ar.length) {
-//                    address_txt = address_txt + ar.join(', ');
-//                }
-//            }
-
-    var info = '';
-    info += (record.organization_name) ? '<b>' + record.organization_name + '</b>' + '<br>' : '';
-//    info += (address_txt != '') ? address_txt + '<br>' : '';
-    info += (record.telephone) ? 'Phone: ' + record.telephone + '<br>' : '';
-    info += (record.web_page_address && record.web_page_address.url) ? '<a target="_blank" href="' + record.web_page_address.url + '">' + record.web_page_address.url + '</a>' + '<br>' : '';
-    info += (record.areas_served) ? 'Service Area: ' + record.areas_served + '<br>' : '';
-
     this._markers.push(new google.maps.Marker({
         position: new google.maps.LatLng(record.location_1.latitude, record.location_1.longitude),
         map: this._map
     }));
                        
     google.maps.event.addListener(this._markers[this._markers.length-1], 'click', function () {
-        self._infoWindow.setContent(tmpl(self.tpl, record));
+        self._infoWindow.setContent(tmpl(self.tplInfowindow, record));
         self._infoWindow.open(self._map, this);
         self._map.setZoom(self.clickZoom);
         self._map.setCenter(this.getPosition());
@@ -146,10 +135,17 @@ SocrataGoogleMaps.prototype.render = function(div) {
 
     if (this.enableDirections) {
         $('#' + div).append(this._directionsDiv);
+        
+        this._directionsDiv.on('click', 'button', function(ev, el) {
+            console.log("In click");
+        });
+        
+        
     }
     
     if (this.enableListings) {
         $('#' + div).append(this._listingsDiv);
+        this._listingsDiv.append('<h3>Location</h3>');
         this._ul = $('<ul/>');
         this._listingsDiv.append(this._ul);
     }
