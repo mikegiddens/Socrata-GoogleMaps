@@ -1,0 +1,35 @@
+<html>
+
+<head>
+    <title>Socrata - Google Map Component</title>
+    <link rel="icon" type="image/jpg" href="./resources/images/DCLogo.jpg">
+    
+    <link rel="stylesheet" type="text/css" href="./resources/js/socrata-googlemaps.css">
+
+    <script src="https://code.jquery.com/jquery-1.12.3.min.js" integrity="sha256-aaODHAgvwQW1bFOGXMeX+pC4PZIPsvn2h1sArYOhgXQ=" crossorigin="anonymous"></script>
+    <script src='https://maps.googleapis.com/maps/api/js?sensor=true'></script>
+    <script src='./resources/js/socrata-googlemaps.js'></script>
+    
+    <script>
+        $(function () {
+            sgm = new SocrataGoogleMaps({
+                baseUrl: 'https://data.douglas.co.us',
+                table: 't3ja-9fqv',
+                tpl: '<b>{%=o.organization_name%}</b><br>Phone: {%=o.telephone%}<br><a target="_blank" href="{%=o.web_page_address.url%}">{%=o.web_page_address.url%}</a><br>Service Area: {%=o.areas_served%}<br>'
+            }).render('sgm').load({
+//                category: 'Caregiver-Respite Support',
+                $order: 'organization_name'
+            }, function(el) {
+                // loaded
+                console.log("done", sgm.getRecords().length);
+            });
+        });
+    </script>
+
+</head>
+
+<body>
+    <div id="sgm" class="sgm"></div>
+</body>
+
+</html>
