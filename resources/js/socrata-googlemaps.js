@@ -11,29 +11,13 @@ SocrataGoogleMaps = function(config) {
     };
     this.zoom = config.zoom || 10;
     this.clickZoom = config.clickZoom || 15;
-    this.enableListings = config.enableListings || true;
-    this.enableDirections = config.enableDirections || true;
+    this.enableListings = (config.enableListings == false) ? false : true;
+    this.enableDirections = (config.enableDirections == false) ? false : true;
     this.formatData = config.formatData || false;
     this._markers = [];
     this._data = [];
-    this._directionsDiv = $('<div class="sgm-directions"><div class="mapp-route"><a href="#" class="mapp-myloc">My location</a><div><span class="mapp-dir-icon mapp-dir-a"></span><input class="mapp-dir-saddr" tabindex="1"><a href="#" class="mapp-dir-swap"><span class="mapp-dir-icon mapp-dir-arrows" title="Swap start and end"></span></a></div><div class="mapp-dir-saddr-err"></div><div><span class="mapp-dir-icon mapp-dir-b"></span><input class="sgm-dir-daddr" tabindex="2"></div><div class="mapp-dir-daddr-err"></div></div><div style="margin-top: 10px;"><input class="mapp-dir-get" type="button" value="Get Directions"><a class="mapp-dir-print" href="#">Print</a><a class="mapp-dir-close" href="#">Close</a><span class="mapp-spinner" style="display:none"></span></div></div>');
+    this._directionsDiv = $('<div class="sgm-directions" style="display:none"><div class="mapp-route"><a href="#" class="mapp-myloc">My location</a><div><span class="mapp-dir-icon mapp-dir-a"></span><input class="mapp-dir-saddr" tabindex="1"><a href="#" class="mapp-dir-swap"><span class="mapp-dir-icon mapp-dir-arrows" title="Swap start and end">aaa</span></a></div><div class="mapp-dir-saddr-err"></div><div><span class="mapp-dir-icon mapp-dir-b"></span><input class="sgm-dir-daddr" tabindex="2"></div><div class="mapp-dir-daddr-err"></div></div><div style="margin-top: 10px;"><button class="mapp-dir-get">Get Directions</button><a class="mapp-dir-print" href="#">Print</a><a class="mapp-dir-close" href="#">Close</a><span class="mapp-spinner" style="display:none"></span></div><div id="mapp-dir-renderer" class="mapp-dir-renderer" style="direction: ltr;"></div></div>');
 
-//    <div class="mapp-route">
-//		<a href="#" class="mapp-myloc">My location</a>
-//		<div>
-//			<span class="mapp-dir-icon mapp-dir-a"></span>
-//			<input class="mapp-dir-saddr" tabindex="1">
-//			<a href="#" class="mapp-dir-swap"><span class="mapp-dir-icon mapp-dir-arrows" title="Swap start and end"></span></a>
-//
-//		</div>
-//		<div class="mapp-dir-saddr-err"></div>
-//
-//		<div>
-//			<span class="mapp-dir-icon mapp-dir-b"></span>
-//			<input class="sgm-dir-daddr" tabindex="2">
-//		</div>
-//		<div class="mapp-dir-daddr-err"></div>
-//	</div>
         
     this._listingsDiv = $('<div class="sgm-listings"></div>');
     this._mapDiv = $('<div class="sgm-map"></div>');
@@ -43,19 +27,11 @@ SocrataGoogleMaps = function(config) {
     return this;
 }
 
-//
-//var markers = [];//some array
-//var bounds = new google.maps.LatLngBounds();
-//for (var i = 0; i < markers.length; i++) {
-// bounds.extend(markers[i].getPosition());
-//}
-//map.fitBounds(bounds);
-
 SocrataGoogleMaps.prototype.load = function(filter, cb) {
     var self = this;
     $.getJSON(this.baseUrl + '/resource/' + this.table + '.json', filter, function(data) {
-        if(self.formatData) {
-            $.each(data, function (idx, record) {
+        $.each(data, function (idx, record) {
+            if(self.formatData) {
                 $.each(self.formatData, function(fx, fd) {
                     switch(fd.type) {
                         case 'parse':
@@ -66,8 +42,13 @@ SocrataGoogleMaps.prototype.load = function(filter, cb) {
                             break;
                     }
                 });
-            });
-        }
+            }
+            if(self.enableDirections) {
+                record = data[idx];
+                record.enableDirections = self.enableDirections;
+                data[idx] = record;
+            }
+        });
         self.renderRecords(data);
         self._data = data;
         if (cb) {
@@ -93,7 +74,20 @@ SocrataGoogleMaps.prototype.renderRecords = function(data, status) {
         ev.data.parent._listingsDiv.find('li').removeClass('selected');
         marker.addClass('selected');
     });
+    
+    this._listingsDiv.on('click', 'li span.get_directions', { parent: this }, function(ev, el) {
+        self.setDirectionData(ev.data.parent._data[$(this).closest("li").data('idx')]);
+//        ev.stopPropagation();
+    });
+    
     return this;
+}
+
+SocrataGoogleMaps.prototype.setDirectionData = function(record) {
+    var self = this;
+    console.log("record: ", record);
+    $('.sgm-dir-daddr').val(tmpl(self.tplDirections, record));
+    $(".sgm-directions").show();
 }
 
 SocrataGoogleMaps.prototype.addMarker = function(record) {
@@ -115,7 +109,7 @@ SocrataGoogleMaps.prototype.addListing = function(record, idx) {
     if (this.enableListings) {
         var code = '<li data-idx=' + idx + '><div class="icon"><img title="" src="https://maps.google.com/intl/en_us/mapfiles/ms/micons/red-dot.png" style="" scale="0"></div><div class="">' + record.organization_name;
         if (this.enableDirections) {
-            code += '<br><span>Get directons</span>';            
+            code += '<br><span class="get_directions">Get directons</span>';            
         }
         code += '</div></li>';
         var li = $(code);
@@ -124,21 +118,54 @@ SocrataGoogleMaps.prototype.addListing = function(record, idx) {
 }
 
 SocrataGoogleMaps.prototype.render = function(div) {
+    var self = this;
 
     this._infoWindow = new google.maps.InfoWindow();
+    google.maps.event.addListener(this._infoWindow, 'domready', function() {
+        $("span.get_directions").on('click', function(ev) {
+            console.log($(this));
+        });
+    })    
 
     $('#' + div).append(this._mapDiv);
     this._map = new google.maps.Map(this._mapDiv[0], {
         zoom: this.zoom,
         center: new google.maps.LatLng(this.center.lat, this.center.lng)
     });
+    this._directionsDisplay = new google.maps.DirectionsRenderer({
+        map: this._map
+    });
+    this._directionsService = new google.maps.DirectionsService();
 
     if (this.enableDirections) {
         $('#' + div).append(this._directionsDiv);
+        this._directionsDisplay.setPanel(self._directionsDiv.find(".mapp-dir-renderer")[0]);
         
         this._directionsDiv.on('click', 'button', function(ev, el) {
-            console.log("In click");
+            var request = {
+                destination: self._directionsDiv.find(".sgm-dir-daddr")[0].value,
+                origin: self._directionsDiv.find(".mapp-dir-saddr")[0].value,
+                travelMode: google.maps.TravelMode.DRIVING
+            };
+            self._directionsService.route(request, function(response, status) {
+                if (status == google.maps.DirectionsStatus.OK) {
+                  // Display the route on the map.
+                  self._directionsDisplay.setDirections(response);
+                }
+            });
         });
+        this._directionsDiv.on('click', 'a.mapp-dir-close', function(ev, el) {
+            self._directionsDiv.find(".sgm-dir-daddr")[0].value = '';
+            self._directionsDiv.find(".mapp-dir-saddr")[0].value = '';
+            self._directionsDiv.find(".mapp-dir-renderer").empty();
+            $(".sgm-directions").show();
+        });
+        this._directionsDiv.on('click', 'a.mapp-dir-swap', function(ev, el) {
+            var tmp = self._directionsDiv.find(".mapp-dir-saddr")[0].value;
+            self._directionsDiv.find(".mapp-dir-saddr")[0].value = self._directionsDiv.find(".sgm-dir-daddr")[0].value;
+            self._directionsDiv.find(".sgm-dir-daddr")[0].value = tmp;
+        });
+
         
         
     }

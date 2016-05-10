@@ -25,9 +25,23 @@
     background-color: #fafafa;
 }
 
-.sgm-listings li span {
+.get_directions {
     cursor: pointer;
     text-decoration: underline;
+}
+
+.hrdiv {
+    border-top: 1px solid lightgray;
+    margin-top: 3px;
+}
+
+.sgm-directions input {
+    line-height: normal;
+    width: 80%;
+}
+
+.sgm-directions div {
+    padding: 1px;
 }
 
 .sgm-listings li.selected {
