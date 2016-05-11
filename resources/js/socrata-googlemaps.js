@@ -15,7 +15,7 @@ SocrataGoogleMaps = function (config) {
     this.formatData = config.formatData || false;
     this._markers = [];
     this._data = [];
-    this._directionsDiv = $('<div class="sgm-directions" style="display:none"><div class="sgm-route"><a href="#" class="sgm-myloc">My location</a><div><span class="sgm-dir-icon sgm-dir-a"></span><input class="sgm-dir-saddr" tabindex="1"><a href="#" class="sgm-dir-swap"><span class="sgm-dir-icon sgm-dir-arrows" title="Swap start and end">aaa</span></a></div><div class="sgm-dir-saddr-err"></div><div><span class="sgm-dir-icon sgm-dir-b"></span><input class="sgm-dir-daddr" tabindex="2"></div><div class="sgm-dir-daddr-err"></div></div><div style="margin-top: 10px;"><button class="sgm-dir-get">Get Directions</button><button class="sgm-dir-close">Close</button><span class="sgm-spinner" style="display:none"></span></div><div id="sgm-dir-renderer" class="sgm-dir-renderer" style="direction: ltr;"></div></div>');
+    this._directionsDiv = $('<div class="sgm-directions" style="display:none"><div class="sgm-route"><a href="#" class="sgm-myloc">My location</a><div><span class="sgm-dir-icon sgm-dir-a"></span><input class="sgm-dir-saddr" tabindex="1"><a href="#" class="sgm-dir-swap"><span class="sgm-dir-icon sgm-dir-arrows" title="Swap start and end">aaa</span></a></div><div class="sgm-dir-saddr-err"></div><div><span class="sgm-dir-icon sgm-dir-b"></span><input class="sgm-dir-daddr" tabindex="2"></div><div class="sgm-dir-daddr-err"></div></div><div style="margin-top: 10px;"><button class="sgm-dir-get">Get Directions</button><button class="sgm-dir-close">Close</button><span class="sgm-spinner" style="display:none"></span></div><div class="sgm-dir-renderer" style="direction: ltr;"></div></div>');
 
 
     this._listingsDiv = $('<div class="sgm-listings"></div>');
@@ -88,8 +88,8 @@ SocrataGoogleMaps.prototype.renderRecords = function (data, status) {
 
 SocrataGoogleMaps.prototype.setDirectionData = function (record) {
     var self = this;
-    $('.sgm-dir-daddr').val(tmpl(self.tplDirections, record));
-    $(".sgm-directions").show();
+    self._directionsDiv.find(".sgm-dir-daddr")[0].value = tmpl(self.tplDirections, record);
+    self._directionsDiv.show();
 }
 
 SocrataGoogleMaps.prototype.addMarker = function (record, idx) {
@@ -164,7 +164,7 @@ SocrataGoogleMaps.prototype.render = function (div) {
         this._directionsDiv.on('click', 'button.sgm-dir-close', function (ev, el) {
             self._directionsDiv.find(".sgm-dir-daddr")[0].value = '';
             self._directionsDiv.find(".sgm-dir-renderer").empty();
-            $(".sgm-directions").hide();
+            self._directionsDiv.hide();
             self._directionsDisplay.setMap(null);
         });
 
@@ -189,7 +189,7 @@ SocrataGoogleMaps.prototype.render = function (div) {
                         }, function (results, status) {
                             if (status === google.maps.GeocoderStatus.OK) {
                                 if (results[1] && results[1].formatted_address) {
-                                    $(".sgm-dir-saddr").val(results[1].formatted_address);
+                                    self._directionsDiv.find(".sgm-dir-saddr")[0].value = results[1].formatted_address;
                                 }
                             }
                         });
