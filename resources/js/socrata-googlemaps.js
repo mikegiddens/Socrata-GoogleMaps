@@ -144,7 +144,7 @@ SocrataGoogleMaps.prototype.render = function (div) {
         $('#' + div).append(this._directionsDiv);
         this._directionsDisplay.setPanel(self._directionsDiv.find(".sgm-dir-renderer")[0]);
 
-        this._directionsDiv.on('click', 'button', function (ev, el) {
+        this._directionsDiv.on('click', 'button.sgm-dir-get', function (ev, el) {
             var request = {
                 destination: self._directionsDiv.find(".sgm-dir-daddr")[0].value,
                 origin: self._directionsDiv.find(".sgm-dir-saddr")[0].value,
