@@ -1,6 +1,7 @@
 // Javascript Tempaltes - https://github.com/blueimp/JavaScript-Templates
 // License MIT
 !function(e){"use strict";var n=function(e,t){var r=/[^\w\-\.:]/.test(e)?new Function(n.arg+",tmpl","var _e=tmpl.encode"+n.helper+",_s='"+e.replace(n.regexp,n.func)+"';return _s;"):n.cache[e]=n.cache[e]||n(n.load(e));return t?r(t,n):function(e){return r(e,n)}};n.cache={},n.load=function(e){return document.getElementById(e).innerHTML},n.regexp=/([\s'\\])(?!(?:[^{]|\{(?!%))*%\})|(?:\{%(=|#)([\s\S]+?)%\})|(\{%)|(%\})/g,n.func=function(e,n,t,r,c,u){return n?{"\n":"\\n","\r":"\\r","	":"\\t"," ":" "}[n]||"\\"+n:t?"="===t?"'+_e("+r+")+'":"'+("+r+"==null?'':"+r+")+'":c?"';":u?"_s+='":void 0},n.encReg=/[<>&"'\x00]/g,n.encMap={"<":"&lt;",">":"&gt;","&":"&amp;",'"':"&quot;","'":"&#39;"},n.encode=function(e){return(null==e?"":""+e).replace(n.encReg,function(e){return n.encMap[e]||""})},n.arg="o",n.helper=",print=function(s,e){_s+=e?(s==null?'':s):_e(s);},include=function(s,d){_s+=tmpl(s,d);}","function"==typeof define&&define.amd?define(function(){return n}):"object"==typeof module&&module.exports?module.exports=n:e.tmpl=n}(this);
+
 SocrataGoogleMaps = function (config) {
     this.baseUrl = config.baseUrl;
     this.table = config.table;
@@ -15,9 +16,7 @@ SocrataGoogleMaps = function (config) {
     this.formatData = config.formatData || false;
     this._markers = [];
     this._data = [];
-    this._directionsDiv = $('<div class="sgm-directions" style="display:none"><div class="sgm-route"><a href="#" class="sgm-myloc">My location</a><div><span class="sgm-dir-icon sgm-dir-a"></span><input class="sgm-dir-saddr" tabindex="1"><a href="#" class="sgm-dir-swap"><span class="sgm-dir-icon sgm-dir-arrows" title="Swap start and end">aaa</span></a></div><div class="sgm-dir-saddr-err"></div><div><span class="sgm-dir-icon sgm-dir-b"></span><input class="sgm-dir-daddr" tabindex="2"></div><div class="sgm-dir-daddr-err"></div></div><div style="margin-top: 10px;"><button class="sgm-dir-get">Get Directions</button><button class="sgm-dir-close">Close</button><span class="sgm-spinner" style="display:none"></span></div><div class="sgm-dir-renderer" style="direction: ltr;"></div></div>');
-
-
+    this._directionsDiv = $('<div class="sgm-directions" style="display:none"><div class="sgm-route"><a href="#" class="sgm-myloc">My location</a><div style="position:relative"><span class="sgm-dir-icon sgm-dir-a"></span><input class="sgm-dir-saddr" tabindex="1"><a href="#" class="sgm-dir-swap"></a></div><div class="sgm-dir-saddr-err"></div><div><span class="sgm-dir-icon sgm-dir-b"></span><input class="sgm-dir-daddr" tabindex="2"></div><div class="sgm-dir-daddr-err"></div></div><div style="margin-top: 10px;"><button class="sgm-dir-get">Get Directions</button><button class="sgm-dir-close">Close</button><span class="sgm-spinner" style="display:none"></span></div><div class="sgm-dir-renderer" style="direction: ltr;"></div></div>');
     this._listingsDiv = $('<div class="sgm-listings"></div>');
     this._mapDiv = $('<div class="sgm-map"></div>');
     this.tplInfowindow = config.tplInfowindow || '';
@@ -77,7 +76,7 @@ SocrataGoogleMaps.prototype.renderRecords = function (data, status) {
         marker.addClass('selected');
     });
 
-    this._listingsDiv.on('click', 'li span.get_directions', {
+    this._listingsDiv.on('click', 'li span.sgm-get-directions', {
         parent: this
     }, function (ev, el) {
         self.setDirectionData(ev.data.parent._data[$(this).closest("li").data('idx')]);
@@ -119,7 +118,7 @@ SocrataGoogleMaps.prototype.addListing = function (record, idx) {
     if (this.enableListings) {
         var code = '<li data-idx=' + idx + '><div class="icon"><img title="" src="https://maps.google.com/intl/en_us/mapfiles/ms/micons/red-dot.png" style="" scale="0"></div><div class="">' + record.organization_name;
         if (this.enableDirections) {
-            code += '<br><span class="get_directions">Get directons</span>';
+            code += '<br><span class="sgm-get-directions">Get directons</span>';
         }
         code += '</div></li>';
         var li = $(code);
