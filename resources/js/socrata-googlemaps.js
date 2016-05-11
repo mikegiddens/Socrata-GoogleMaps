@@ -15,7 +15,7 @@ SocrataGoogleMaps = function (config) {
     this.formatData = config.formatData || false;
     this._markers = [];
     this._data = [];
-    this._directionsDiv = $('<div class="sgm-directions" style="display:none"><div class="sgm-route"><a href="#" class="sgm-myloc">My location</a><div><span class="sgm-dir-icon sgm-dir-a"></span><input class="sgm-dir-saddr" tabindex="1"><a href="#" class="sgm-dir-swap"><span class="sgm-dir-icon sgm-dir-arrows" title="Swap start and end">aaa</span></a></div><div class="sgm-dir-saddr-err"></div><div><span class="sgm-dir-icon sgm-dir-b"></span><input class="sgm-dir-daddr" tabindex="2"></div><div class="sgm-dir-daddr-err"></div></div><div style="margin-top: 10px;"><button class="sgm-dir-get">Get Directions</button><button class="sgm-dir-close">Close</button><span class="sgm-spinner" style="display:none"></span></div><div id="sgm-dir-renderer" class="sgm-dir-renderer" style="direction: ltr;"></div></div>');
+    this._directionsDiv = $('<div class="sgm-directions" style="display:none"><div class="sgm-route"><a href="#" class="sgm-myloc">My location</a></span><div style="position: relative;"><span class="sgm-dir-icon sgm-dir-a"></span><input class="sgm-dir-saddr" tabindex="1"><a href="#" class="sgm-dir-swap"></a></div><div class="sgm-dir-saddr-err"></div><div><span class="sgm-dir-icon sgm-dir-b"></span><input class="sgm-dir-daddr" tabindex="2"></div><div class="sgm-dir-daddr-err"></div></div><div style="margin-top: 10px;"><button class="sgm-dir-get">Get Directions</button>&nbsp;&nbsp;&nbsp;<button class="sgm-dir-close">Close</button><span class="sgm-spinner" style="display:none"></span></div><div id="sgm-dir-renderer" class="sgm-dir-renderer" style="direction: ltr;"></div></div>');
 
 
     this._listingsDiv = $('<div class="sgm-listings"></div>');
@@ -77,7 +77,7 @@ SocrataGoogleMaps.prototype.renderRecords = function (data, status) {
         marker.addClass('selected');
     });
 
-    this._listingsDiv.on('click', 'li span.get_directions', {
+    this._listingsDiv.on('click', 'li span.sgm-get-directions', {
         parent: this
     }, function (ev, el) {
         self.setDirectionData(ev.data.parent._data[$(this).closest("li").data('idx')]);
@@ -119,7 +119,7 @@ SocrataGoogleMaps.prototype.addListing = function (record, idx) {
     if (this.enableListings) {
         var code = '<li data-idx=' + idx + '><div class="icon"><img title="" src="https://maps.google.com/intl/en_us/mapfiles/ms/micons/red-dot.png" style="" scale="0"></div><div class="">' + record.organization_name;
         if (this.enableDirections) {
-            code += '<br><span class="get_directions">Get directons</span>';
+            code += '<br><span class="sgm-get-directions">Get directons</span>';
         }
         code += '</div></li>';
         var li = $(code);
