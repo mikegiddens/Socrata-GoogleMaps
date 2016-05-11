@@ -1,11 +1,13 @@
+.sgm {
+    font-family: Roboto,Arial,sans-serif;
+}
+
 .sgm-map {
     height: 300px;
     width: 100%;
 }
 
 .sgm-listings {
-/*    max-height: 300px;*/
-/*    overflow: auto;*/
     width: 100%;
 }
 
@@ -27,14 +29,8 @@
     background-color: #fafafa;
 }
 
-.get_directions {
-    cursor: pointer;
-    text-decoration: underline;
-}
-
-.hrdiv {
-    border-top: 1px solid lightgray;
-    margin-top: 3px;
+.sgm-listings h3 {
+    margin: 5px 0 5px 0;
 }
 
 .sgm-directions input {
@@ -53,4 +49,47 @@
 .sgm-listings div.icon {
     width: 35px;
     float: left;
+}
+
+.sgm-myloc {
+    padding: 5px 0 5px 0;
+    display: block;
+    background: transparent url(../images/location-arrow.svg) no-repeat center right;
+    background-size: 20px 20px;
+    width: 105px;
+}
+
+.sgm-dir-swap {
+    background-image: url(../images/sort.svg);
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    background-size: 20px 20px;
+    position: absolute;
+    top: 14px;
+}
+
+.sgm-dir-a {
+    margin-right: 5px;
+    background-image: url(../images/a.png);
+    display: block;
+    width: 14px;
+    height: 20px;
+    background-size: 14px 20px;
+    float: left;
+}
+
+.sgm-dir-b {
+    margin-right: 5px;
+    background-image: url(../images/b.png);
+    display: block;
+    width: 14px;
+    height: 20px;
+    background-size: 14px 20px;
+    float: left;
+}
+
+.sgm-get-directions {
+    cursor: pointer;
+    text-decoration: underline;
 }
