@@ -1,0 +1,45 @@
+<html>
+
+<head>
+    <title>Socrata - Google Map Component</title>
+    <link rel="icon" type="image/jpg" href="../resources/images/DCLogo.jpg">
+    
+    <link rel="stylesheet" type="text/css" href="../resources/js/socrata-googlemaps.css">
+
+    <script src="https://code.jquery.com/jquery-1.12.3.min.js" integrity="sha256-aaODHAgvwQW1bFOGXMeX+pC4PZIPsvn2h1sArYOhgXQ=" crossorigin="anonymous"></script>
+    <script src='https://maps.googleapis.com/maps/api/js?sensor=true'></script>
+    <script src='../resources/js/socrata-googlemaps.js'></script>
+    
+    <script>
+        $(function () {
+            sgm = new SocrataGoogleMaps({
+                baseUrl: 'https://data.douglas.co.us',
+                table: 't3ja-9fqv',
+                formatData: [{
+                    field: 'location_1.human_address',
+                    type: 'parse'
+                }],
+                latitude: 'location_1.latitude',
+                longitude: 'location_1.longitude',
+                tplInfowindow: '<b>{%=o.organization_name%}</b><br>{% if(o.location_1 && o.location_1.human_address && o.location_1.human_address.address) { %} {%=o.location_1.human_address.address%}<br>{% } %}{% if(o.location_1 && o.location_1.human_address && o.location_1.human_address.city) { %} {%=o.location_1.human_address.city%}, {% } %}{% if(o.location_1 && o.location_1.human_address && o.location_1.human_address.state) { %} {%=o.location_1.human_address.state%} {% } %}{% if(o.location_1 && o.location_1.human_address && o.location_1.human_address.zip) { %} {%=o.location_1.human_address.zip%} {% } %}{% if(o.telephone) { %}<br>Phone: {%=o.telephone%}<br>{% } %}{% if(o.web_page_address && o.web_page_address.url) { %}<a target="_blank" href="{%=o.web_page_address.url%}">{%=o.web_page_address.url%}</a><br>{% } %}{% if(o.areas_served) { %}Service Area: {%=o.areas_served%}<br>{% } %}', 
+                
+//                '{% if(o.enableDirections) { %} <div class="hrdiv"> <span class="get_directions">Get Directions</span></div> {% } %}',
+                
+                tplDirections: '{% if(o.location_1 && o.location_1.latitude) { %}{%=o.location_1.latitude%}, {% } %}{% if(o.location_1 && o.location_1.longitude) { %} {%=o.location_1.longitude%} {% } %}'
+            }).render('sgm').load({
+//                category: 'Caregiver-Respite Support',
+                $order: 'organization_name'
+            }, function(el) {
+                // loaded
+                console.log("done", sgm.getRecords().length);
+            });
+        });
+    </script>
+
+</head>
+
+<body>
+    <div id="sgm" class="sgm"></div>
+</body>
+
+</html>

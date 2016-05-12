@@ -96,13 +96,21 @@ SocrataGoogleMaps.prototype.setDirectionData = function (record) {
 SocrataGoogleMaps.prototype.addMarker = function (record, idx) {
     var self = this;
     if(self.latitude != '' && self.longitude != '') {
-        var lat = eval('record.' + self.latitude);
-        var lon = eval('record.' + self.longitude);
-        if(typeof lat != 'undefined' && typeof lon != 'undefined') {
-            this._markers.push(new google.maps.Marker({
-                position: new google.maps.LatLng(lat,lon),
-                map: this._map
-            }));
+        var errorFlag = false;
+        try{
+            var lat = eval('record.' + self.latitude);
+            var lon = eval('record.' + self.longitude);
+        }
+        catch(e) {
+            errorFlag = true;
+        }
+        if(!errorFlag) {
+            if(typeof lat != 'undefined' && typeof lon != 'undefined') {
+                this._markers.push(new google.maps.Marker({
+                    position: new google.maps.LatLng(lat,lon),
+                    map: this._map
+                }));
+            }
         }
     }
 
@@ -123,8 +131,10 @@ SocrataGoogleMaps.prototype.addMarker = function (record, idx) {
 }
 
 SocrataGoogleMaps.prototype.addListing = function (record, idx) {
+    var self = this;
     if (this.enableListings) {
-        var code = '<li data-idx=' + idx + '><div class="icon"><img title="" src="https://maps.google.com/intl/en_us/mapfiles/ms/micons/red-dot.png" style="" scale="0"></div><div class="">' + record.organization_name;
+//        var code = '<li data-idx=' + idx + '><div class="icon"><img title="" src="https://maps.google.com/intl/en_us/mapfiles/ms/micons/red-dot.png" style="" scale="0"></div><div class="">' + record.organization_name;
+        var code = '<li data-idx=' + idx + '><div class="icon"><img title="" src="https://maps.google.com/intl/en_us/mapfiles/ms/micons/red-dot.png" style="" scale="0"></div><div class="">' + tmpl(self.tplListing, record);
         if (this.enableDirections) {
             code += '<br><span class="sgm-get-directions">Get directons</span>';
         }

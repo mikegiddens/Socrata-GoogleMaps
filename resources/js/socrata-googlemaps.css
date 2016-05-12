@@ -23,6 +23,7 @@
     border-bottom: 1px solid lightgray;
     padding: 5px;
     clear: left;
+    min-height: 28px;
 }
 
 .sgm-listings li:hover {

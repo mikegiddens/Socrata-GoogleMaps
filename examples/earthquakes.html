@@ -1,0 +1,44 @@
+<html>
+
+<head>
+    <title>Earthquake</title>
+    <link rel="icon" type="image/jpg" href="./resources/images/eqimage.png">
+    
+    <link rel="stylesheet" type="text/css" href="../resources/js/socrata-googlemaps.css">
+
+    <script src="https://code.jquery.com/jquery-1.12.3.min.js" integrity="sha256-aaODHAgvwQW1bFOGXMeX+pC4PZIPsvn2h1sArYOhgXQ=" crossorigin="anonymous"></script>
+    <script src='https://maps.googleapis.com/maps/api/js?sensor=true'></script>
+    <script src='../resources/js/socrata-googlemaps.js'></script>
+    
+    <script>
+        $(function () {
+            sgm = new SocrataGoogleMaps({
+                baseUrl: 'https://soda.demo.socrata.com',
+                table: '6yvf-kk3n',
+				zoom: 4,
+				latitude: 'location.coordinates[1]',
+                longitude: 'location.coordinates[0]',
+				center: {
+					lat: 41.0637,
+					lng: -111.0368
+				},
+                enableDirections: false,
+                tplInfowindow: '<b>Earthquake Id: {%=o.earthquake_id%}</b><br>{% if(o.region) { %} Region: {%=o.region%}<br>{% } %}{% if(o.depth) { %} Depth: {%=o.depth%}<br> {% } %}{% if(o.magnitude) { %} Magnitude: {%=o.magnitude%}<br> {% } %}{% if(o.source) { %} Source: {%=o.source%} {% } %}', 
+                tplDirections: '{% if(o.location && o.location.coordinates && o.location.coordinates[0] && o.location.coordinates[1]) { %}{%=o.location.coordinates[1]%}, {%=o.location.coordinates[1]%}{% } %}',
+                tplListing: '{%=o.region%}'
+            }).render('sgm').load({
+                $order: 'region'
+            }, function(el) {
+                // loaded
+                console.log("done", sgm.getRecords().length);
+            });
+        });
+    </script>
+
+</head>
+
+<body>
+    <div id="sgm" class="sgm"></div>
+</body>
+
+</html>
