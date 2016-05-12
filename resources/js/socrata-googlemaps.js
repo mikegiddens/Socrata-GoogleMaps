@@ -14,6 +14,8 @@ SocrataGoogleMaps = function (config) {
     this.enableListings = (config.enableListings == false) ? false : true;
     this.enableDirections = (config.enableDirections == false) ? false : true;
     this.formatData = config.formatData || false;
+    this.latitude = config.latitude || '';
+    this.longitude = config.longitude || '';
     this._markers = [];
     this._data = [];
     this._directionsDiv = $('<div class="sgm-directions" style="display:none"><div class="sgm-route"><a href="#" class="sgm-myloc">My location</a><div style="position:relative"><span class="sgm-dir-icon sgm-dir-a"></span><input class="sgm-dir-saddr" tabindex="1"><a href="#" class="sgm-dir-swap"></a></div><div class="sgm-dir-saddr-err"></div><div><span class="sgm-dir-icon sgm-dir-b"></span><input class="sgm-dir-daddr" tabindex="2"></div><div class="sgm-dir-daddr-err"></div></div><div style="margin-top: 10px;"><button class="sgm-dir-get">Get Directions</button>&nbsp;&nbsp;<button class="sgm-dir-close">Close</button><span class="sgm-spinner" style="display:none"></span></div><div class="sgm-dir-renderer" style="direction: ltr;"></div></div>');
@@ -93,10 +95,16 @@ SocrataGoogleMaps.prototype.setDirectionData = function (record) {
 
 SocrataGoogleMaps.prototype.addMarker = function (record, idx) {
     var self = this;
-    this._markers.push(new google.maps.Marker({
-        position: new google.maps.LatLng(record.location_1.latitude, record.location_1.longitude),
-        map: this._map
-    }));
+    if(self.latitude != '' && self.longitude != '') {
+        var lat = eval('record.' + self.latitude);
+        var lon = eval('record.' + self.longitude);
+        if(typeof lat != 'undefined' && typeof lon != 'undefined') {
+            this._markers.push(new google.maps.Marker({
+                position: new google.maps.LatLng(lat,lon),
+                map: this._map
+            }));
+        }
+    }
 
     google.maps.event.addListener(this._markers[this._markers.length - 1], 'click', function () {
         self._infoWindow.setContent(tmpl(self.tplInfowindow, record));
