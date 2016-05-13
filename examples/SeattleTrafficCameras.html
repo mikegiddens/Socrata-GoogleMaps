@@ -15,7 +15,6 @@
             sgm = new SocrataGoogleMaps({
                 baseUrl: 'https://soda.demo.socrata.com',
                table: '6hpd-5iwn',
-                //table: '6yvf-kk3n',
 				zoom: 11,
 				latitude: 'location.coordinates[1]',
                 longitude: 'location.coordinates[0]',
@@ -23,14 +22,16 @@
 					lat: 47.513811,
 					lng: -122.288151
 				},
-                enableDirections: false,
+             
 				tplListing: '{%=o.camera_description%}',
-				tplInfowindow: '<b>{%=o.camera_description%}</b>,<br> {%=o.camera_owner%}',
-                
+				tplInfowindow: '<b>{%=o.camera_description%}</b><br>{% if(o.camera_owner) { %} Camera Owner: {%=o.camera_owner%}<br>{% } %}<img src="{%=o.image_url%}" alt="Traffic Cameras" height="133" width="260"> ',
+				tplDirections: '{%=o.camera_description%}'
+				  
             }).render('sgm').load({
-                //$order: 'region'
+                
+				$order: 'camera_description'
             }, function(el) {
-                // loaded
+                
                 console.log("done", sgm.getRecords().length);
             });
         });
