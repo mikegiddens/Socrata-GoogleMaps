@@ -84,6 +84,7 @@ SocrataGoogleMaps.prototype.renderRecords = function (data, status) {
         parent: this
     }, function (ev, el) {
         var marker = $(this);
+        self.unsetDirections();
         google.maps.event.trigger(ev.data.parent._markers[marker.data('idx')], 'click');
         ev.data.parent._listingsDiv.find('li').removeClass('selected');
         marker.addClass('selected');
@@ -93,6 +94,11 @@ SocrataGoogleMaps.prototype.renderRecords = function (data, status) {
         parent: this
     }, function (ev, el) {
         self.setDirectionData(ev.data.parent._data[$(this).closest("li").data('idx')]);
+        google.maps.event.trigger(ev.data.parent._markers[$(this).closest("li").data('idx')], 'click');
+        ev.data.parent._listingsDiv.find('li').removeClass('selected');
+        $(this).closest("li").addClass('selected');
+        
+        ev.stopPropagation();
     });
 
     return this;
@@ -155,6 +161,14 @@ SocrataGoogleMaps.prototype.addListing = function (record, idx) {
     }
 }
 
+SocrataGoogleMaps.prototype.unsetDirections = function () {
+    var self = this;
+    self._directionsDiv.find(".sgm-dir-daddr")[0].value = '';
+    self._directionsDiv.find(".sgm-dir-renderer").empty();
+    self._directionsDiv.hide();
+    self._directionsDisplay.setMap(null);
+}
+
 SocrataGoogleMaps.prototype.render = function (div) {
     var self = this;
 
@@ -190,10 +204,7 @@ SocrataGoogleMaps.prototype.render = function (div) {
         });
 
         this._directionsDiv.on('click', 'button.sgm-dir-close', function (ev, el) {
-            self._directionsDiv.find(".sgm-dir-daddr")[0].value = '';
-            self._directionsDiv.find(".sgm-dir-renderer").empty();
-            self._directionsDiv.hide();
-            self._directionsDisplay.setMap(null);
+            self.unsetDirections();
         });
 
         this._directionsDiv.on('click', 'a.sgm-dir-swap', function (ev, el) {
