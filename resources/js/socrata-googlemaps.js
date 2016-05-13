@@ -64,6 +64,17 @@ SocrataGoogleMaps.prototype.getRecords = function (record) {
 
 SocrataGoogleMaps.prototype.renderRecords = function (data, status) {
     var self = this;
+    
+//    clearing the listings
+    this._ul.empty();
+//    clearing the markers
+    if(self._markers.length) {
+        $.each(self._markers, function(idx,marker){
+            marker.setMap(null);
+        });
+        self._markers = [];
+    }
+    
     $.each(data, function (idx, record) {
         self.addMarker(record, idx);
         self.addListing(record, idx);
