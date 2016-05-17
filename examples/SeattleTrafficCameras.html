@@ -1,8 +1,8 @@
 <html>
 
 <head>
-    <title>Earthquake</title>
-    <link rel="icon" type="image/jpg" href="./resources/images/eqimage.png">
+    <title>Seattle Traffic Cameras</title>
+    <link rel="icon" type="image/jpg" href="./resources/images/surveillance.png">
     
     <link rel="stylesheet" type="text/css" href="../resources/js/socrata-googlemaps.css">
 
@@ -14,22 +14,24 @@
         $(function () {
             sgm = new SocrataGoogleMaps({
                 baseUrl: 'https://soda.demo.socrata.com',
-                table: '6yvf-kk3n',
-				zoom: 4,
+               table: '6hpd-5iwn',
+				zoom: 11,
 				latitude: 'location.coordinates[1]',
                 longitude: 'location.coordinates[0]',
 				center: {
-					lat: 41.0637,
-					lng: -111.0368
+					lat: 47.513811,
+					lng: -122.288151
 				},
-                enableDirections: false,
-                tplInfowindow: '<b>Earthquake Id: {%=o.earthquake_id%}</b><br>{% if(o.region) { %} Region: {%=o.region%}<br>{% } %}{% if(o.depth) { %} Depth: {%=o.depth%}<br> {% } %}{% if(o.magnitude) { %} Magnitude: {%=o.magnitude%}<br> {% } %}{% if(o.source) { %} Source: {%=o.source%} {% } %}', 
-                tplDirections: '{% if(o.location && o.location.coordinates && o.location.coordinates[0] && o.location.coordinates[1]) { %}{%=o.location.coordinates[1]%}, {%=o.location.coordinates[1]%}{% } %}',
-                tplListing: '{%=o.region%}'
+             
+				tplListing: '{%=o.camera_description%}',
+				tplInfowindow: '<b>{%=o.camera_description%}</b><br>{% if(o.camera_owner) { %} Camera Owner: {%=o.camera_owner%}<br>{% } %}<img src="{%=o.image_url%}" alt="Traffic Cameras" height="133" width="260"> ',
+				tplDirections: '{%=o.camera_description%}'
+				  
             }).render('sgm').load({
-                $order: 'region'
+                
+				$order: 'camera_description'
             }, function(el) {
-                // loaded
+                
                 console.log("done", sgm.getRecords().length);
             });
         });
