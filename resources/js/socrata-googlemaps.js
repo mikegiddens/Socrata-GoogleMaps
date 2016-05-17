@@ -153,7 +153,7 @@ SocrataGoogleMaps.prototype.addListing = function (record, idx) {
 //        var code = '<li data-idx=' + idx + '><div class="icon"><img title="" src="https://maps.google.com/intl/en_us/mapfiles/ms/micons/red-dot.png" style="" scale="0"></div><div class="">' + record.organization_name;
         var code = '<li data-idx=' + idx + '><div class="icon"><img title="" src="https://maps.google.com/intl/en_us/mapfiles/ms/micons/red-dot.png" style="" scale="0"></div><div class="">' + tmpl(self.tplListing, record);
         if (this.enableDirections) {
-            code += '<br><span class="sgm-get-directions">Get directons</span>';
+            code += '<br><span class="sgm-get-directions">Get directions</span>';
         }
         code += '</div></li>';
         var li = $(code);
