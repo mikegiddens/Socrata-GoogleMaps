@@ -164,7 +164,7 @@ SocrataGoogleMaps.prototype.addListing = function (record, idx) {
     if (this.enableListings) {
         var code = '<li data-idx=' + idx + '><div class="icon"><img title="" src="https://maps.google.com/intl/en_us/mapfiles/ms/micons/red-dot.png" style="" scale="0"></div><div class="">' + tmpl(self.tplListing, record);
         if (this.enableDirections) {
-            code += '<br><span class="sgm-get-directions">Get directons</span>';
+            code += '<br><span class="sgm-get-directions">Get directions</span>';
         }
         code += '</div></li>';
         var li = $(code);
@@ -220,12 +220,14 @@ SocrataGoogleMaps.prototype.render = function (div) {
         });
 
         this._directionsDiv.on('click', 'a.sgm-dir-swap', function (ev, el) {
+			ev.preventDefault();
             var tmp = self._directionsDiv.find(".sgm-dir-saddr")[0].value;
             self._directionsDiv.find(".sgm-dir-saddr")[0].value = self._directionsDiv.find(".sgm-dir-daddr")[0].value;
             self._directionsDiv.find(".sgm-dir-daddr")[0].value = tmp;
         });
 
         this._directionsDiv.on('click', 'a.sgm-myloc', function (ev, el) {
+			ev.preventDefault();
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(function (position, error) {
                     console.log("error: ", error);
