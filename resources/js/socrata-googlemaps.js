@@ -29,6 +29,7 @@ SocrataGoogleMaps = function (config) {
 
 SocrataGoogleMaps.prototype.load = function (filter, cb) {
     var self = this;
+    this.unsetDirections();
     $.getJSON(this.baseUrl + '/resource/' + this.table + '.json', filter, function (data) {
         $.each(data, function (idx, record) {
             if (self.formatData) {
@@ -62,13 +63,21 @@ SocrataGoogleMaps.prototype.getRecords = function (record) {
 }
 
 SocrataGoogleMaps.prototype.clearMarkers = function () {
-    if (self._markers.length) {
-        $.each(self._markers, function (idx, marker) {
-            marker.setMap(null);
-        });
-        self._markers = [];
+    if (this._markers) {
+        if (this._markers.length) {
+            $.each(this._markers, function (idx, marker) {
+                marker.setMap(null);
+            });
+            this._markers = [];
+        }        
     }
     return this;
+}
+
+SocrataGoogleMaps.prototype.restoreMarkers = function() {
+    $.each(this._data, function (idx, record) {
+        self.addMarker(record, idx);
+    });
 }
 
 SocrataGoogleMaps.prototype.renderRecords = function (data, status) {
@@ -97,6 +106,7 @@ SocrataGoogleMaps.prototype.renderRecords = function (data, status) {
     this._listingsDiv.on('click', 'li span.sgm-get-directions', {
         parent: this
     }, function (ev, el) {
+//        self.clearMarkers();
         self.setDirectionData(ev.data.parent._data[$(this).closest("li").data('idx')]);
         google.maps.event.trigger(ev.data.parent._markers[$(this).closest("li").data('idx')], 'click');
         ev.data.parent._listingsDiv.find('li').removeClass('selected');
@@ -206,6 +216,7 @@ SocrataGoogleMaps.prototype.render = function (div) {
 
         this._directionsDiv.on('click', 'button.sgm-dir-close', function (ev, el) {
             self.unsetDirections();
+//            self.restoreMarkers();
         });
 
         this._directionsDiv.on('click', 'a.sgm-dir-swap', function (ev, el) {

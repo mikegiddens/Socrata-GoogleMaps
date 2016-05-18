@@ -1,0 +1,77 @@
+<html>
+
+<head>
+    <title>Socrata - Google Map Component w/ComboBox</title>
+    
+    <style>
+        #category-picker-select {
+            margin-bottom: 10px;
+        }
+    </style>
+
+    <script src="https://code.jquery.com/jquery-1.12.3.min.js" integrity="sha256-aaODHAgvwQW1bFOGXMeX+pC4PZIPsvn2h1sArYOhgXQ=" crossorigin="anonymous"></script>
+    <script src='https://maps.googleapis.com/maps/api/js'></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/3.10.1/lodash.min.js"></script>
+    <script src="https://cdn.rawgit.com/mikegiddens/socrata-visualizations/0.1.0/vendors/soda-js.js"></script>
+    <script src="https://cdn.rawgit.com/mikegiddens/socrata-visualizations/0.1.0/socrata-visualizations.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="https://rawgit.com/mikegiddens/Socrata-GoogleMaps/master/resources/js/socrata-googlemaps.css">
+    <script src='socrata-googlemaps.js'></script>
+<!--    <script src='https://rawgit.com/mikegiddens/Socrata-GoogleMaps/master/resources/js/socrata-googlemaps.js'></script>-->
+
+    <script>
+        $(function () {
+            sgm = new SocrataGoogleMaps({
+                baseUrl: 'https://data.douglas.co.us',
+                table: 't3ja-9fqv',
+                formatData: [{
+                    field: 'location_1.human_address',
+                    type: 'parse'
+                }],
+                latitude: 'location_1.latitude',
+                longitude: 'location_1.longitude',
+                tplInfowindow: '<b>{%=o.organization_name%}</b><br>{% if(o.location_1 && o.location_1.human_address && o.location_1.human_address.address) { %} {%=o.location_1.human_address.address%}<br>{% } %}{% if(o.location_1 && o.location_1.human_address && o.location_1.human_address.city) { %} {%=o.location_1.human_address.city%}, {% } %}{% if(o.location_1 && o.location_1.human_address && o.location_1.human_address.state) { %} {%=o.location_1.human_address.state%} {% } %}{% if(o.location_1 && o.location_1.human_address && o.location_1.human_address.zip) { %} {%=o.location_1.human_address.zip%} {% } %}{% if(o.telephone) { %}<br>Phone: {%=o.telephone%}<br>{% } %}{% if(o.web_page_address && o.web_page_address.url) { %}<a target="_blank" href="{%=o.web_page_address.url%}">{%=o.web_page_address.url%}</a><br>{% } %}{% if(o.areas_served) { %}Service Area: {%=o.areas_served%}<br>{% } %}',
+                tplDirections: '{% if(o.location_1 && o.location_1.human_address && o.location_1.human_address.address) { %}{%=o.location_1.human_address.address%}{% } %}{% if(o.location_1 && o.location_1.human_address && o.location_1.human_address.city) { %} {%=o.location_1.human_address.city%}, {% } %}{% if(o.location_1 && o.location_1.human_address && o.location_1.human_address.state) { %}{%=o.location_1.human_address.state%} {% } %}{% if(o.location_1 && o.location_1.human_address && o.location_1.human_address.zip) { %} {%=o.location_1.human_address.zip%} {% } %}',
+                tplListing: '{%=o.organization_name%}'
+            }).render('sgm').load({
+                $order: 'organization_name'
+            });
+
+            categoryCombo = new SV.Combo('#category-picker-select', {
+                baseUrl: 'data.douglas.co.us',
+                field: 'category',
+                defaulttext: 'All Categories',
+                defaultvalue: '#all#',
+                table: 't3ja-9fqv'
+            });
+
+            categoryCombo.store.load({
+                field: 'category',
+                select: ['category', 'count(*) as count'],
+                where: 'category IS NOT NULL',
+                group: ['category'],
+                order: ['category ASC']
+            });
+
+            categoryCombo.addListener('change', function () {
+                if (categoryCombo.value == '#all#') {
+                    sgm.load({
+                        $order: 'organization_name'
+                    });
+                } else {
+                    sgm.load({
+                        category: categoryCombo.value,
+                        $order: 'organization_name'
+                    });
+                }
+            });
+        });
+    </script>
+</head>
+
+<body>
+    <select id="category-picker-select"></select>
+    <div id="sgm" class="sgm"></div>
+</body>
+
+</html>
