@@ -1,0 +1,259 @@
+<html>
+
+<head>
+    <title>Socrata - Google Map Component</title>
+    <link rel="icon" type="image/jpg" href="./resources/images/DCLogo.jpg">
+    
+    <link rel="stylesheet" type="text/css" href="./resources/js/socrata-googlemaps.css">
+
+    <script src="https://code.jquery.com/jquery-1.12.3.min.js" integrity="sha256-aaODHAgvwQW1bFOGXMeX+pC4PZIPsvn2h1sArYOhgXQ=" crossorigin="anonymous"></script>
+    <script src='https://maps.googleapis.com/maps/api/js?sensor=true'></script>
+    <script src='./resources/js/socrata-googlemaps.js'></script>
+    
+    <script>
+        $(function () {
+            
+//            Adult Day Care
+            sgm_daycare = new SocrataGoogleMaps({
+                baseUrl: 'https://data.douglas.co.us',
+                table: 't3ja-9fqv',
+                enableDirections: true,
+                formatData: [{
+                    field: 'location_1.human_address',
+                    type: 'parse'
+                }],
+                tplInfowindow: '<b>{%=o.organization_name%}</b><br>{% if(o.location_1 && o.location_1.human_address && o.location_1.human_address.address) { %} {%=o.location_1.human_address.address%}<br>{% } %}{% if(o.location_1 && o.location_1.human_address && o.location_1.human_address.city) { %} {%=o.location_1.human_address.city%}, {% } %}{% if(o.location_1 && o.location_1.human_address && o.location_1.human_address.state) { %} {%=o.location_1.human_address.state%} {% } %}{% if(o.location_1 && o.location_1.human_address && o.location_1.human_address.zip) { %} {%=o.location_1.human_address.zip%} {% } %}{% if(o.telephone) { %}<br>Phone: {%=o.telephone%}<br>{% } %}{% if(o.web_page_address && o.web_page_address.url) { %}<a target="_blank" href="{%=o.web_page_address.url%}">{%=o.web_page_address.url%}</a><br>{% } %}{% if(o.areas_served) { %}Service Area: {%=o.areas_served%}<br>{% } %}', 
+                tplDirections: '{% if(o.location_1 && o.location_1.human_address && o.location_1.human_address.address) { %}{%=o.location_1.human_address.address%}{% } %}{% if(o.location_1 && o.location_1.human_address && o.location_1.human_address.city) { %} {%=o.location_1.human_address.city%}, {% } %}{% if(o.location_1 && o.location_1.human_address && o.location_1.human_address.state) { %}{%=o.location_1.human_address.state%} {% } %}{% if(o.location_1 && o.location_1.human_address && o.location_1.human_address.zip) { %} {%=o.location_1.human_address.zip%} {% } %}'
+            }).render('sgm-daycare').load({
+                category: 'Adult Day Care ',
+                $order: 'organization_name'
+            }, function(el) {
+                // loaded
+                console.log("done", sgm_daycare.getRecords().length);
+            });
+            
+//            Adult Housing - Assisted
+            sgm_assisted = new SocrataGoogleMaps({
+                baseUrl: 'https://data.douglas.co.us',
+                table: 't3ja-9fqv',
+                formatData: [{
+                    field: 'location_1.human_address',
+                    type: 'parse'
+                }],
+                tplInfowindow: '<b>{%=o.organization_name%}</b><br>{% if(o.location_1 && o.location_1.human_address && o.location_1.human_address.address) { %} {%=o.location_1.human_address.address%}<br>{% } %}{% if(o.location_1 && o.location_1.human_address && o.location_1.human_address.city) { %} {%=o.location_1.human_address.city%}, {% } %}{% if(o.location_1 && o.location_1.human_address && o.location_1.human_address.state) { %} {%=o.location_1.human_address.state%} {% } %}{% if(o.location_1 && o.location_1.human_address && o.location_1.human_address.zip) { %} {%=o.location_1.human_address.zip%} {% } %}{% if(o.telephone) { %}<br>Phone: {%=o.telephone%}<br>{% } %}{% if(o.web_page_address && o.web_page_address.url) { %}<a target="_blank" href="{%=o.web_page_address.url%}">{%=o.web_page_address.url%}</a><br>{% } %}{% if(o.areas_served) { %}Service Area: {%=o.areas_served%}<br>{% } %}', 
+                tplDirections: '{% if(o.location_1 && o.location_1.human_address && o.location_1.human_address.address) { %}{%=o.location_1.human_address.address%}{% } %}{% if(o.location_1 && o.location_1.human_address && o.location_1.human_address.city) { %} {%=o.location_1.human_address.city%}, {% } %}{% if(o.location_1 && o.location_1.human_address && o.location_1.human_address.state) { %}{%=o.location_1.human_address.state%} {% } %}{% if(o.location_1 && o.location_1.human_address && o.location_1.human_address.zip) { %} {%=o.location_1.human_address.zip%} {% } %}'
+            }).render('sgm-assisted').load({
+                category: 'Housing - Assisted',
+                $order: 'organization_name'
+            }, function(el) {
+            // loaded
+                console.log("done", sgm_assisted.getRecords().length);
+            });
+            
+//            Adult Housing - Independent
+            sgm_independent = new SocrataGoogleMaps({
+                baseUrl: 'https://data.douglas.co.us',
+                table: 't3ja-9fqv',
+                formatData: [{
+                    field: 'location_1.human_address',
+                    type: 'parse'
+                }],
+                tplInfowindow: '<b>{%=o.organization_name%}</b><br>{% if(o.location_1 && o.location_1.human_address && o.location_1.human_address.address) { %} {%=o.location_1.human_address.address%}<br>{% } %}{% if(o.location_1 && o.location_1.human_address && o.location_1.human_address.city) { %} {%=o.location_1.human_address.city%}, {% } %}{% if(o.location_1 && o.location_1.human_address && o.location_1.human_address.state) { %} {%=o.location_1.human_address.state%} {% } %}{% if(o.location_1 && o.location_1.human_address && o.location_1.human_address.zip) { %} {%=o.location_1.human_address.zip%} {% } %}{% if(o.telephone) { %}<br>Phone: {%=o.telephone%}<br>{% } %}{% if(o.web_page_address && o.web_page_address.url) { %}<a target="_blank" href="{%=o.web_page_address.url%}">{%=o.web_page_address.url%}</a><br>{% } %}{% if(o.areas_served) { %}Service Area: {%=o.areas_served%}<br>{% } %}', 
+                tplDirections: '{% if(o.location_1 && o.location_1.human_address && o.location_1.human_address.address) { %}{%=o.location_1.human_address.address%}{% } %}{% if(o.location_1 && o.location_1.human_address && o.location_1.human_address.city) { %} {%=o.location_1.human_address.city%}, {% } %}{% if(o.location_1 && o.location_1.human_address && o.location_1.human_address.state) { %}{%=o.location_1.human_address.state%} {% } %}{% if(o.location_1 && o.location_1.human_address && o.location_1.human_address.zip) { %} {%=o.location_1.human_address.zip%} {% } %}'
+            }).render('sgm-independent').load({
+                category: 'Housing - Independent',
+                $order: 'organization_name'
+            }, function(el) {
+            // loaded
+                console.log("done", sgm_independent.getRecords().length);
+            });
+            
+//            Advocacy or Policy Work
+            sgm_advocacy = new SocrataGoogleMaps({
+                baseUrl: 'https://data.douglas.co.us',
+                table: 't3ja-9fqv',
+                formatData: [{
+                    field: 'location_1.human_address',
+                    type: 'parse'
+                }],
+                tplInfowindow: '<b>{%=o.organization_name%}</b><br>{% if(o.location_1 && o.location_1.human_address && o.location_1.human_address.address) { %} {%=o.location_1.human_address.address%}<br>{% } %}{% if(o.location_1 && o.location_1.human_address && o.location_1.human_address.city) { %} {%=o.location_1.human_address.city%}, {% } %}{% if(o.location_1 && o.location_1.human_address && o.location_1.human_address.state) { %} {%=o.location_1.human_address.state%} {% } %}{% if(o.location_1 && o.location_1.human_address && o.location_1.human_address.zip) { %} {%=o.location_1.human_address.zip%} {% } %}{% if(o.telephone) { %}<br>Phone: {%=o.telephone%}<br>{% } %}{% if(o.web_page_address && o.web_page_address.url) { %}<a target="_blank" href="{%=o.web_page_address.url%}">{%=o.web_page_address.url%}</a><br>{% } %}{% if(o.areas_served) { %}Service Area: {%=o.areas_served%}<br>{% } %}', 
+                tplDirections: '{% if(o.location_1 && o.location_1.human_address && o.location_1.human_address.address) { %}{%=o.location_1.human_address.address%}{% } %}{% if(o.location_1 && o.location_1.human_address && o.location_1.human_address.city) { %} {%=o.location_1.human_address.city%}, {% } %}{% if(o.location_1 && o.location_1.human_address && o.location_1.human_address.state) { %}{%=o.location_1.human_address.state%} {% } %}{% if(o.location_1 && o.location_1.human_address && o.location_1.human_address.zip) { %} {%=o.location_1.human_address.zip%} {% } %}'
+            }).render('sgm-advocacy').load({
+                category: 'Advocacy or Policy Work',
+                $order: 'organization_name'
+            }, function(el) {
+            // loaded
+                console.log("done", sgm_advocacy.getRecords().length);
+            });
+            
+//            Caregiver Support
+            sgm_caregiver = new SocrataGoogleMaps({
+                baseUrl: 'https://data.douglas.co.us',
+                table: 't3ja-9fqv',
+                formatData: [{
+                    field: 'location_1.human_address',
+                    type: 'parse'
+                }],
+                tplInfowindow: '<b>{%=o.organization_name%}</b><br>{% if(o.location_1 && o.location_1.human_address && o.location_1.human_address.address) { %} {%=o.location_1.human_address.address%}<br>{% } %}{% if(o.location_1 && o.location_1.human_address && o.location_1.human_address.city) { %} {%=o.location_1.human_address.city%}, {% } %}{% if(o.location_1 && o.location_1.human_address && o.location_1.human_address.state) { %} {%=o.location_1.human_address.state%} {% } %}{% if(o.location_1 && o.location_1.human_address && o.location_1.human_address.zip) { %} {%=o.location_1.human_address.zip%} {% } %}{% if(o.telephone) { %}<br>Phone: {%=o.telephone%}<br>{% } %}{% if(o.web_page_address && o.web_page_address.url) { %}<a target="_blank" href="{%=o.web_page_address.url%}">{%=o.web_page_address.url%}</a><br>{% } %}{% if(o.areas_served) { %}Service Area: {%=o.areas_served%}<br>{% } %}', 
+                tplDirections: '{% if(o.location_1 && o.location_1.human_address && o.location_1.human_address.address) { %}{%=o.location_1.human_address.address%}{% } %}{% if(o.location_1 && o.location_1.human_address && o.location_1.human_address.city) { %} {%=o.location_1.human_address.city%}, {% } %}{% if(o.location_1 && o.location_1.human_address && o.location_1.human_address.state) { %}{%=o.location_1.human_address.state%} {% } %}{% if(o.location_1 && o.location_1.human_address && o.location_1.human_address.zip) { %} {%=o.location_1.human_address.zip%} {% } %}'
+            }).render('sgm-caregiver').load({
+                category: 'Caregiver-Respite Support',
+                $order: 'organization_name'
+            }, function(el) {
+            // loaded
+                console.log("done", sgm_caregiver.getRecords().length);
+            });
+            
+//            Case Management
+            sgm_casemanagement = new SocrataGoogleMaps({
+                baseUrl: 'https://data.douglas.co.us',
+                table: 't3ja-9fqv',
+                formatData: [{
+                    field: 'location_1.human_address',
+                    type: 'parse'
+                }],
+                tplInfowindow: '<b>{%=o.organization_name%}</b><br>{% if(o.location_1 && o.location_1.human_address && o.location_1.human_address.address) { %} {%=o.location_1.human_address.address%}<br>{% } %}{% if(o.location_1 && o.location_1.human_address && o.location_1.human_address.city) { %} {%=o.location_1.human_address.city%}, {% } %}{% if(o.location_1 && o.location_1.human_address && o.location_1.human_address.state) { %} {%=o.location_1.human_address.state%} {% } %}{% if(o.location_1 && o.location_1.human_address && o.location_1.human_address.zip) { %} {%=o.location_1.human_address.zip%} {% } %}{% if(o.telephone) { %}<br>Phone: {%=o.telephone%}<br>{% } %}{% if(o.web_page_address && o.web_page_address.url) { %}<a target="_blank" href="{%=o.web_page_address.url%}">{%=o.web_page_address.url%}</a><br>{% } %}{% if(o.areas_served) { %}Service Area: {%=o.areas_served%}<br>{% } %}', 
+                tplDirections: '{% if(o.location_1 && o.location_1.human_address && o.location_1.human_address.address) { %}{%=o.location_1.human_address.address%}{% } %}{% if(o.location_1 && o.location_1.human_address && o.location_1.human_address.city) { %} {%=o.location_1.human_address.city%}, {% } %}{% if(o.location_1 && o.location_1.human_address && o.location_1.human_address.state) { %}{%=o.location_1.human_address.state%} {% } %}{% if(o.location_1 && o.location_1.human_address && o.location_1.human_address.zip) { %} {%=o.location_1.human_address.zip%} {% } %}'
+            }).render('sgm-casemanagement').load({
+                category: 'Case Management',
+                $order: 'organization_name'
+            }, function(el) {
+            // loaded
+                console.log("done", sgm_casemanagement.getRecords().length);
+            });
+            
+//            Chore and Handyman Services
+            sgm_chore = new SocrataGoogleMaps({
+                baseUrl: 'https://data.douglas.co.us',
+                table: 't3ja-9fqv',
+                formatData: [{
+                    field: 'location_1.human_address',
+                    type: 'parse'
+                }],
+                tplInfowindow: '<b>{%=o.organization_name%}</b><br>{% if(o.location_1 && o.location_1.human_address && o.location_1.human_address.address) { %} {%=o.location_1.human_address.address%}<br>{% } %}{% if(o.location_1 && o.location_1.human_address && o.location_1.human_address.city) { %} {%=o.location_1.human_address.city%}, {% } %}{% if(o.location_1 && o.location_1.human_address && o.location_1.human_address.state) { %} {%=o.location_1.human_address.state%} {% } %}{% if(o.location_1 && o.location_1.human_address && o.location_1.human_address.zip) { %} {%=o.location_1.human_address.zip%} {% } %}{% if(o.telephone) { %}<br>Phone: {%=o.telephone%}<br>{% } %}{% if(o.web_page_address && o.web_page_address.url) { %}<a target="_blank" href="{%=o.web_page_address.url%}">{%=o.web_page_address.url%}</a><br>{% } %}{% if(o.areas_served) { %}Service Area: {%=o.areas_served%}<br>{% } %}', 
+                tplDirections: '{% if(o.location_1 && o.location_1.human_address && o.location_1.human_address.address) { %}{%=o.location_1.human_address.address%}{% } %}{% if(o.location_1 && o.location_1.human_address && o.location_1.human_address.city) { %} {%=o.location_1.human_address.city%}, {% } %}{% if(o.location_1 && o.location_1.human_address && o.location_1.human_address.state) { %}{%=o.location_1.human_address.state%} {% } %}{% if(o.location_1 && o.location_1.human_address && o.location_1.human_address.zip) { %} {%=o.location_1.human_address.zip%} {% } %}'
+            }).render('sgm-chore').load({
+                category: 'Home Maintenance / Housekeeping',
+                $order: 'organization_name'
+            }, function(el) {
+            // loaded
+                console.log("done", sgm_chore.getRecords().length);
+            });
+            
+//            Education Opportunities for Seniors
+            sgm_educationseniors = new SocrataGoogleMaps({
+                baseUrl: 'https://data.douglas.co.us',
+                table: 't3ja-9fqv',
+                formatData: [{
+                    field: 'location_1.human_address',
+                    type: 'parse'
+                }],
+                tplInfowindow: '<b>{%=o.organization_name%}</b><br>{% if(o.location_1 && o.location_1.human_address && o.location_1.human_address.address) { %} {%=o.location_1.human_address.address%}<br>{% } %}{% if(o.location_1 && o.location_1.human_address && o.location_1.human_address.city) { %} {%=o.location_1.human_address.city%}, {% } %}{% if(o.location_1 && o.location_1.human_address && o.location_1.human_address.state) { %} {%=o.location_1.human_address.state%} {% } %}{% if(o.location_1 && o.location_1.human_address && o.location_1.human_address.zip) { %} {%=o.location_1.human_address.zip%} {% } %}{% if(o.telephone) { %}<br>Phone: {%=o.telephone%}<br>{% } %}{% if(o.web_page_address && o.web_page_address.url) { %}<a target="_blank" href="{%=o.web_page_address.url%}">{%=o.web_page_address.url%}</a><br>{% } %}{% if(o.areas_served) { %}Service Area: {%=o.areas_served%}<br>{% } %}', 
+                tplDirections: '{% if(o.location_1 && o.location_1.human_address && o.location_1.human_address.address) { %}{%=o.location_1.human_address.address%}{% } %}{% if(o.location_1 && o.location_1.human_address && o.location_1.human_address.city) { %} {%=o.location_1.human_address.city%}, {% } %}{% if(o.location_1 && o.location_1.human_address && o.location_1.human_address.state) { %}{%=o.location_1.human_address.state%} {% } %}{% if(o.location_1 && o.location_1.human_address && o.location_1.human_address.zip) { %} {%=o.location_1.human_address.zip%} {% } %}'
+            }).render('sgm-educationseniors').load({
+                category: 'Information, Referral and Assistance',
+                $order: 'organization_name'
+            }, function(el) {
+            // loaded
+                console.log("done", sgm_educationseniors.getRecords().length);
+            });
+            
+//            Education Opportunities
+            sgm_education = new SocrataGoogleMaps({
+                baseUrl: 'https://data.douglas.co.us',
+                table: 't3ja-9fqv',
+                formatData: [{
+                    field: 'location_1.human_address',
+                    type: 'parse'
+                }],
+                tplInfowindow: '<b>{%=o.organization_name%}</b><br>{% if(o.location_1 && o.location_1.human_address && o.location_1.human_address.address) { %} {%=o.location_1.human_address.address%}<br>{% } %}{% if(o.location_1 && o.location_1.human_address && o.location_1.human_address.city) { %} {%=o.location_1.human_address.city%}, {% } %}{% if(o.location_1 && o.location_1.human_address && o.location_1.human_address.state) { %} {%=o.location_1.human_address.state%} {% } %}{% if(o.location_1 && o.location_1.human_address && o.location_1.human_address.zip) { %} {%=o.location_1.human_address.zip%} {% } %}{% if(o.telephone) { %}<br>Phone: {%=o.telephone%}<br>{% } %}{% if(o.web_page_address && o.web_page_address.url) { %}<a target="_blank" href="{%=o.web_page_address.url%}">{%=o.web_page_address.url%}</a><br>{% } %}{% if(o.areas_served) { %}Service Area: {%=o.areas_served%}<br>{% } %}', 
+                tplDirections: '{% if(o.location_1 && o.location_1.human_address && o.location_1.human_address.address) { %}{%=o.location_1.human_address.address%}{% } %}{% if(o.location_1 && o.location_1.human_address && o.location_1.human_address.city) { %} {%=o.location_1.human_address.city%}, {% } %}{% if(o.location_1 && o.location_1.human_address && o.location_1.human_address.state) { %}{%=o.location_1.human_address.state%} {% } %}{% if(o.location_1 && o.location_1.human_address && o.location_1.human_address.zip) { %} {%=o.location_1.human_address.zip%} {% } %}'
+            }).render('sgm-education').load({
+                category: 'Education Opportunities',
+                $order: 'organization_name'
+            }, function(el) {
+            // loaded
+                console.log("done", sgm_education.getRecords().length);
+            });
+            
+//            Health
+            sgm_health = new SocrataGoogleMaps({
+                baseUrl: 'https://data.douglas.co.us',
+                table: 't3ja-9fqv',
+                center: {
+                    lat: 39.61656138500007,
+                    lng: -105.015055126
+                },
+                formatData: [{
+                    field: 'location_1.human_address',
+                    type: 'parse'
+                }],
+                tplInfowindow: '<b>{%=o.organization_name%}</b><br>{% if(o.location_1 && o.location_1.human_address && o.location_1.human_address.address) { %} {%=o.location_1.human_address.address%}<br>{% } %}{% if(o.location_1 && o.location_1.human_address && o.location_1.human_address.city) { %} {%=o.location_1.human_address.city%}, {% } %}{% if(o.location_1 && o.location_1.human_address && o.location_1.human_address.state) { %} {%=o.location_1.human_address.state%} {% } %}{% if(o.location_1 && o.location_1.human_address && o.location_1.human_address.zip) { %} {%=o.location_1.human_address.zip%} {% } %}{% if(o.telephone) { %}<br>Phone: {%=o.telephone%}<br>{% } %}{% if(o.web_page_address && o.web_page_address.url) { %}<a target="_blank" href="{%=o.web_page_address.url%}">{%=o.web_page_address.url%}</a><br>{% } %}{% if(o.areas_served) { %}Service Area: {%=o.areas_served%}<br>{% } %}', 
+                tplDirections: '{% if(o.location_1 && o.location_1.human_address && o.location_1.human_address.address) { %}{%=o.location_1.human_address.address%}{% } %}{% if(o.location_1 && o.location_1.human_address && o.location_1.human_address.city) { %} {%=o.location_1.human_address.city%}, {% } %}{% if(o.location_1 && o.location_1.human_address && o.location_1.human_address.state) { %}{%=o.location_1.human_address.state%} {% } %}{% if(o.location_1 && o.location_1.human_address && o.location_1.human_address.zip) { %} {%=o.location_1.human_address.zip%} {% } %}'
+            }).render('sgm-health').load({
+                category: 'Mental Health Services',
+                $order: 'organization_name'
+            }, function(el) {
+            // loaded
+                console.log("done", sgm_health.getRecords().length);
+            });
+            
+//            Hearing
+            sgm_hearing = new SocrataGoogleMaps({
+                baseUrl: 'https://data.douglas.co.us',
+                table: 't3ja-9fqv',
+                formatData: [{
+                    field: 'location_1.human_address',
+                    type: 'parse'
+                }],
+                tplInfowindow: '<b>{%=o.organization_name%}</b><br>{% if(o.location_1 && o.location_1.human_address && o.location_1.human_address.address) { %} {%=o.location_1.human_address.address%}<br>{% } %}{% if(o.location_1 && o.location_1.human_address && o.location_1.human_address.city) { %} {%=o.location_1.human_address.city%}, {% } %}{% if(o.location_1 && o.location_1.human_address && o.location_1.human_address.state) { %} {%=o.location_1.human_address.state%} {% } %}{% if(o.location_1 && o.location_1.human_address && o.location_1.human_address.zip) { %} {%=o.location_1.human_address.zip%} {% } %}{% if(o.telephone) { %}<br>Phone: {%=o.telephone%}<br>{% } %}{% if(o.web_page_address && o.web_page_address.url) { %}<a target="_blank" href="{%=o.web_page_address.url%}">{%=o.web_page_address.url%}</a><br>{% } %}{% if(o.areas_served) { %}Service Area: {%=o.areas_served%}<br>{% } %}', 
+                tplDirections: '{% if(o.location_1 && o.location_1.human_address && o.location_1.human_address.address) { %}{%=o.location_1.human_address.address%}{% } %}{% if(o.location_1 && o.location_1.human_address && o.location_1.human_address.city) { %} {%=o.location_1.human_address.city%}, {% } %}{% if(o.location_1 && o.location_1.human_address && o.location_1.human_address.state) { %}{%=o.location_1.human_address.state%} {% } %}{% if(o.location_1 && o.location_1.human_address && o.location_1.human_address.zip) { %} {%=o.location_1.human_address.zip%} {% } %}'
+            }).render('sgm-hearing').load({
+                category: 'Assistive Devices or Equipment',
+                $order: 'organization_name'
+            }, function(el) {
+            // loaded
+                console.log("done", sgm_hearing.getRecords().length);
+            });
+            
+        });
+    </script>
+
+</head>
+
+<body>
+    <h3>Adult Day Care</h3>
+    <div id="sgm-daycare" class="sgm-daycare"></div>
+    
+    <h3>Adult Housing - Assisted</h3>
+    <div id="sgm-assisted" class="sgm-assisted"></div>
+    
+    <h3>Adult Housing - Assisted</h3>
+    <div id="sgm-independent" class="sgm-independent"></div>
+    
+    <h3>Advocacy or Policy Work</h3>
+    <div id="sgm-advocacy" class="sgm-advocacy"></div>
+    
+    <h3>Caregiver Support</h3>
+    <div id="sgm-caregiver" class="sgm-caregiver"></div>
+    
+    <h3>Case Management</h3>
+    <div id="sgm-caregiver" class="sgm-casemanagement"></div>
+    
+    <h3>Chore and Handyman Services</h3>
+    <div id="sgm-chore" class="sgm-chore"></div>
+    
+    <h3>Education Opportunities for Seniors</h3>
+    <div id="sgm-educationseniors" class="sgm-educationseniors"></div>
+    
+    <h3>Education Opportunities</h3>
+    <div id="sgm-education" class="sgm-education"></div>
+    
+    <h3>Health</h3>
+    <div id="sgm-health" class="sgm-health"></div>
+    
+    <h3>Hearing</h3>
+    <div id="sgm-hearing" class="sgm-hearing"></div>
+</body>
+
+</html>

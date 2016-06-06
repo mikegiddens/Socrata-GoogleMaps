@@ -2,104 +2,6 @@
 // License MIT
 !function(e){"use strict";var n=function(e,t){var r=/[^\w\-\.:]/.test(e)?new Function(n.arg+",tmpl","var _e=tmpl.encode"+n.helper+",_s='"+e.replace(n.regexp,n.func)+"';return _s;"):n.cache[e]=n.cache[e]||n(n.load(e));return t?r(t,n):function(e){return r(e,n)}};n.cache={},n.load=function(e){return document.getElementById(e).innerHTML},n.regexp=/([\s'\\])(?!(?:[^{]|\{(?!%))*%\})|(?:\{%(=|#)([\s\S]+?)%\})|(\{%)|(%\})/g,n.func=function(e,n,t,r,c,u){return n?{"\n":"\\n","\r":"\\r","	":"\\t"," ":" "}[n]||"\\"+n:t?"="===t?"'+_e("+r+")+'":"'+("+r+"==null?'':"+r+")+'":c?"';":u?"_s+='":void 0},n.encReg=/[<>&"'\x00]/g,n.encMap={"<":"&lt;",">":"&gt;","&":"&amp;",'"':"&quot;","'":"&#39;"},n.encode=function(e){return(null==e?"":""+e).replace(n.encReg,function(e){return n.encMap[e]||""})},n.arg="o",n.helper=",print=function(s,e){_s+=e?(s==null?'':s):_e(s);},include=function(s,d){_s+=tmpl(s,d);}","function"==typeof define&&define.amd?define(function(){return n}):"object"==typeof module&&module.exports?module.exports=n:e.tmpl=n}(this);
 
-
-/* EventManager, v1.0.1
- *
- * Copyright (c) 2009, Howard Rauscher
- * Licensed under the MIT License
- */
-
-(function () {
-
-    function EventManager() {
-        this._listeners = {};
-    }
-    EventManager.prototype = {
-        addListener: function (name, fn) {
-            (this._listeners[name] = this._listeners[name] || []).push(fn);
-            return this;
-        },
-        removeListener: function (name, fn) {
-            if (arguments.length === 1) { // remove all
-                this._listeners[name] = [];
-            } else if (typeof (fn) === 'function') {
-                var listeners = this._listeners[name];
-                if (listeners !== undefined) {
-                    var foundAt = -1;
-                    for (var i = 0, len = listeners.length; i < len && foundAt === -1; i++) {
-                        if (listeners[i] === fn) {
-                            foundAt = i;
-                        }
-                    }
-
-                    if (foundAt >= 0) {
-                        listeners.splice(foundAt, 1);
-                    }
-                }
-            }
-
-            return this;
-        },
-        fire: function (name, args) {
-            var listeners = this._listeners[name];
-            args = args || [];
-            if (listeners !== undefined) {
-                var data = {},
-                    evt;
-                for (var i = 0, len = listeners.length; i < len; i++) {
-                    evt = new EventManager.EventArg(name, data);
-
-                    listeners[i].apply(window, args.concat(evt));
-
-                    data = evt.data;
-                    if (evt.removed) {
-                        listeners.splice(i, 1);
-                        len = listeners.length;
-                        --i;
-                    }
-                    if (evt.cancelled) {
-                        break;
-                    }
-                }
-            }
-            return this;
-        },
-        hasListeners: function (name) {
-            return (this._listeners[name] === undefined ? 0 : this._listeners[name].length) > 0;
-        }
-    };
-    EventManager.eventify = function (object, manager) {
-        var methods = EventManager.eventify.methods;
-        manager = manager || new EventManager();
-
-        for (var i = 0, len = methods.length; i < len; i++)(function (method) {
-            object[method] = function () {
-                return manager[method].apply(manager, arguments);
-            };
-        })(methods[i]);
-
-        return manager;
-    };
-    EventManager.eventify.methods = ['addListener', 'removeListener', 'fire'];
-
-    EventManager.EventArg = function (name, data) {
-        this.name = name;
-        this.data = data;
-        this.cancelled = false;
-        this.removed = false;
-    };
-    EventManager.EventArg.prototype = {
-        cancel: function () {
-            this.cancelled = true;
-        },
-        remove: function () {
-            this.removed = true;
-        }
-    };
-
-    window.EventManager = EventManager;
-})();
-
 SocrataGoogleMaps = function (config) {
     this.baseUrl = config.baseUrl;
     this.table = config.table;
@@ -122,7 +24,6 @@ SocrataGoogleMaps = function (config) {
     this.tplInfowindow = config.tplInfowindow || '';
     this.tplListing = config.tplListing || '';
     this.tplDirections = config.tplDirections || '';
-	EventManager.eventify(this);
     return this;
 }
 
@@ -150,8 +51,6 @@ SocrataGoogleMaps.prototype.load = function (filter, cb) {
             }
         });
         self.renderRecords(data);
-		self.fire('load', [data]);
-		
         if (cb) {
             cb(null, data);
         }
@@ -202,7 +101,6 @@ SocrataGoogleMaps.prototype.renderRecords = function (data, status) {
         google.maps.event.trigger(ev.data.parent._markers[marker.data('idx')], 'click');
         ev.data.parent._listingsDiv.find('li').removeClass('selected');
         marker.addClass('selected');
-		self.fire('locationSelected', [ev.data.parent._markers[marker.data('idx')], ev.data.parent._markers]);
     });
 
     this._listingsDiv.on('click', 'li span.sgm-get-directions', {

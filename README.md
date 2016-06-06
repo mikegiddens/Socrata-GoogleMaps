@@ -59,14 +59,17 @@ The stylesheet can be easily modified to add needed changes.  The namespace is .
 * __Text Box (A)__ - Source address for the "Get Directions".
 * __Text Box (B)__ - Destination address for the "Get Directions".
 
-
-
 # Methods
 
 * __constructor( { properties } )__ - Returns pointer to the instance.
 * __render( divId )__ - This is the ```html <div id="sgm" class="sgm"></div>``` tag that would be use to render the component.
 * __load( options, callback )__ - This will make a request to the Socrata table and load the information.
 * __getRecords()__ - Returns the records that where returned from the Socrata table
+
+# Events
+
+* __load__ - Event on the map load. Returns the filtered data set used in the map.
+* __locationSelected__ - Event on selecting a location. Returns the selected location data and list of all the locations.
 
 
 # Demos

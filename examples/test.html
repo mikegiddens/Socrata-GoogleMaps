@@ -28,25 +28,27 @@
 				tplDirections: '{%=o.camera_description%}'
 				  
             }).render('sgm').load({
+                
 				$order: 'camera_description'
             }, function(el) {
                 
                 console.log("done", sgm.getRecords().length);
             });
- 			
+			
 			sgm.addListener('load', function (data) {
 				console.log("In Map load event: ");
 			});
 			sgm.addListener('locationSelected', function (selectedLocation, locations) {
 				console.log("In Location Selected event: ");
 			});
-       });
+			
+			
+        });
     </script>
 
 </head>
 
 <body>
-	<h1>Seattle Traffic Cameras </h1>
     <div id="sgm" class="sgm"></div>
 </body>
 
