@@ -23,14 +23,13 @@
                 longitude: 'location_1.longitude',
                 tplInfowindow: '<b>{%=o.organization_name%}</b><br>{% if(o.location_1 && o.location_1.human_address && o.location_1.human_address.address) { %} {%=o.location_1.human_address.address%}<br>{% } %}{% if(o.location_1 && o.location_1.human_address && o.location_1.human_address.city) { %} {%=o.location_1.human_address.city%}, {% } %}{% if(o.location_1 && o.location_1.human_address && o.location_1.human_address.state) { %} {%=o.location_1.human_address.state%} {% } %}{% if(o.location_1 && o.location_1.human_address && o.location_1.human_address.zip) { %} {%=o.location_1.human_address.zip%} {% } %}{% if(o.telephone) { %}<br>Phone: {%=o.telephone%}<br>{% } %}{% if(o.web_page_address && o.web_page_address.url) { %}<a target="_blank" href="{%=o.web_page_address.url%}">{%=o.web_page_address.url%}</a><br>{% } %}{% if(o.areas_served) { %}Service Area: {%=o.areas_served%}<br>{% } %}', 
                 
-//                '{% if(o.enableDirections) { %} <div class="hrdiv"> <span class="get_directions">Get Directions</span></div> {% } %}',
+
                 
                 tplDirections: '{% if(o.location_1 && o.location_1.latitude) { %}{%=o.location_1.latitude%}, {% } %}{% if(o.location_1 && o.location_1.longitude) { %} {%=o.location_1.longitude%} {% } %}'
             }).render('sgm').load({
-//                category: 'Caregiver-Respite Support',
+
                 $order: 'organization_name'
             }, function(el) {
-                // loaded
                 console.log("done", sgm.getRecords().length);
             });
         });
@@ -39,6 +38,7 @@
 </head>
 
 <body>
+	<h1>Douglas County Address</h1>
     <div id="sgm" class="sgm"></div>
 </body>
 

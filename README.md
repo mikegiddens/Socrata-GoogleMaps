@@ -4,6 +4,9 @@ This library allows developers to embed google map with a simple interface to vi
 
 __Note that the Socrata table being used must have a location field in order for this library to work or a latitude/longitude columns.__
 
+![Screenshot](resources/images/seattle.JPG)
+
+
 # Getting Started
 
 1. Add js and css to your site:
@@ -52,12 +55,27 @@ The stylesheet can be easily modified to add needed changes.  The namespace is .
 * __zoom__ - The zoom level the map will start on. Defaults to 10.
 * __clickZoom__ - Zoom level the map will zoom too when the icon or row is selected. Defaults to 15.
 
+* __My location__ - By clicking "My location"  your current location is shared to the first text box(taken as "From address") to show the direction.
+* __Text Box (A)__ - Source address for the "Get Directions".
+* __Text Box (B)__ - Destination address for the "Get Directions".
+
+
+
 # Methods
 
 * __constructor( { properties } )__ - Returns pointer to the instance.
 * __render( divId )__ - This is the ```html <div id="sgm" class="sgm"></div>``` tag that would be use to render the component.
 * __load( options, callback )__ - This will make a request to the Socrata table and load the information.
-* __getRecords()__ - Returns the records that where returned from the Socrata table.
+* __getRecords()__ - Returns the records that where returned from the Socrata table
+
+
+# Demos
+
+* [Seattle Traffic Cameras](https://htmlpreview.github.io/?https://github.com/mikegiddens/socrata-GoogleMaps/blob/master/examples/SeattleTrafficCameras.html)
+* [Address] (https://htmlpreview.github.io/?https://github.com/mikegiddens/socrata-GoogleMaps/blob/master/examples/address.html)
+* [Earthquakes] (https://htmlpreview.github.io/?https://github.com/mikegiddens/socrata-GoogleMaps/blob/master/examples/earthquakes.html)
+
+---------------------------------------
 
 # Template Engine
 
