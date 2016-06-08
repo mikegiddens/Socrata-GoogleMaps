@@ -24,19 +24,26 @@ __Note that the Socrata table being used must have a location field in order for
 
     ```javascript
     sgm = new SocrataGoogleMaps({
-        baseUrl: 'https://soda.demo.socrata.com',
-        table: '6yvf-kk3n',
-        formatData: [{
-            field: 'location',
-            type: 'parse'
-        }],
-        tplInfowindow: '<b>{%=o.region%}</b>'
-    }).render('sgm').load({
-        $order: 'magnitude'
-    }, function(el) {
-        // loaded
-        console.log("done", sgm.getRecords().length);
-    });
+                baseUrl: 'https://soda.demo.socrata.com',
+                table: '6yvf-kk3n',
+                formatData: false,
+				zoom: 2,
+				latitude: 'location.coordinates[1]',
+                longitude: 'location.coordinates[0]',
+				center: {
+					lat: 26.273714,
+					lng: -3.339844
+				},
+                enableDirections: false,
+                tplInfowindow: '<b>Earthquake Id: {%=o.earthquake_id%}</b><br>{% if(o.region) { %} Region: {%=o.region%}<br>{% } %}{% if(o.depth) { %} Depth: {%=o.depth%}<br> {% } %}{% if(o.magnitude) { %} Magnitude: {%=o.magnitude%}<br> {% } %}{% if(o.source) { %} Source: {%=o.source%} {% } %}', 
+                tplDirections: '{% if(o.location && o.location.coordinates && o.location.coordinates[0] && o.location.coordinates[1]) { %}{%=o.location.coordinates[1]%}, {%=o.location.coordinates[1]%}{% } %}',
+                tplListing: '{%=o.region%}<br>{% if(o.depth) { %} Depth: {%=o.depth%}&nbsp;{% } %}{% if(o.magnitude) { %} Magnitude: {%=o.magnitude%}<br>{% } %}'
+            }).render('sgm').load({
+                $order: 'region'
+            }, function(el) {
+                console.log("done", sgm.getRecords().length);
+            });
+        });
 
     ```
 
@@ -47,17 +54,17 @@ The stylesheet can be easily modified to add needed changes.  The namespace is .
 # Properties
 
 * __baseUrl__ (required) - This is the url to the Socrata server. ie. https://soda.demo.socrata.com
-* __table__ (required) - This is the 4x4 soscrata table id.
-* __tplInfowindow__ - You will need to define your tpl that you will want to see when you click on a marker on the map.  The text here will be rendered inside the popup info window. See Tempalte Engine below for details on how to use define this value.
+* __table__ (required) - This is the 4x4 socrata table id.
+* __tplInfowindow__ - You will need to define your tpl that you will want to see when you click on a marker on the map.  The text here will be rendered inside the popup info window. See Template Engine below for details on how to use define this value.
 * __enableListings__ - This flag is used to render the listings portion of the component. Defaults to true.
 * __enalbleDirections__ - This flag is used to render the directions routing feature of the component. Defaults to true. 
 * __center__ - Object of lat/lng that will be the starting point of the map.  Defaults to: { lat: 39.4, lng: -104.9 }
 * __zoom__ - The zoom level the map will start on. Defaults to 10.
 * __clickZoom__ - Zoom level the map will zoom too when the icon or row is selected. Defaults to 15.
 
-* __My location__ - By clicking "My location"  your current location is shared to the first text box(taken as "From address") to show the direction.
-* __Text Box (A)__ - Source address for the "Get Directions".
-* __Text Box (B)__ - Destination address for the "Get Directions".
+* __tplListing__ - It will define the data format in the listing section. See Template Engine below for details on how to use define this value.
+* __tplDirections__ - You will need to define your tpl, to show the data format to be used in the Source/Destination address to get direction. See Template Engine below for details on how to use define this value.
+* __formatData__ - If the database contains any data to be parsed then "formatData" is used. 
 
 # Methods
 

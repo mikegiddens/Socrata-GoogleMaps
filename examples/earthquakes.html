@@ -15,17 +15,17 @@
             sgm = new SocrataGoogleMaps({
                 baseUrl: 'https://soda.demo.socrata.com',
                 table: '6yvf-kk3n',
-				zoom: 4,
+				zoom: 2,
 				latitude: 'location.coordinates[1]',
                 longitude: 'location.coordinates[0]',
 				center: {
-					lat: 41.0637,
-					lng: -111.0368
+					lat: 26.273714,
+					lng: -3.339844
 				},
                 enableDirections: false,
                 tplInfowindow: '<b>Earthquake Id: {%=o.earthquake_id%}</b><br>{% if(o.region) { %} Region: {%=o.region%}<br>{% } %}{% if(o.depth) { %} Depth: {%=o.depth%}<br> {% } %}{% if(o.magnitude) { %} Magnitude: {%=o.magnitude%}<br> {% } %}{% if(o.source) { %} Source: {%=o.source%} {% } %}', 
                 tplDirections: '{% if(o.location && o.location.coordinates && o.location.coordinates[0] && o.location.coordinates[1]) { %}{%=o.location.coordinates[1]%}, {%=o.location.coordinates[1]%}{% } %}',
-                tplListing: '{%=o.region%}'
+                tplListing: '{%=o.region%}<br>{% if(o.depth) { %} Depth: {%=o.depth%}&nbsp;{% } %}{% if(o.magnitude) { %} Magnitude: {%=o.magnitude%}<br>{% } %}'
             }).render('sgm').load({
                 $order: 'region'
             }, function(el) {
